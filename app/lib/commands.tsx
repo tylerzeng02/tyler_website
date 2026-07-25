@@ -6,13 +6,32 @@ export type ContentCommand = {
   content: ReactNode;
 };
 
+function Bold({ text }: { text: string }) {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <strong key={i} className="font-semibold text-[var(--accent)]">
+            {part}
+          </strong>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
 const experience = [
   {
-    role: "Incoming Engineering Intern",
+    role: "Engineering Research Intern",
     org: "Sunnybrook Research Institute",
-    period: "July 2026 — August 2026",
+    period: "July 2026 — Present",
     bullets: [
-      "Contributing to the development and validation of ultrasound-based medical technologies through hardware integration, experimental testing, and engineering research.",
+      "Developed and calibrated a custom **robotic arm system** to automate **hydrophone data collection** through **skull phantoms** for ultrasound propagation modeling and targeting improvement.",
+      "Implemented **ROS** and **inverse kinematics** for repeatable hydrophone positioning across skull regions and angles.",
+      "Designed an experimental **control interface** to streamline robotic manipulation, pose selection, and data collection.",
     ],
   },
   {
@@ -20,8 +39,8 @@ const experience = [
     org: "Science Fair Club",
     period: "Oct 2025 — Present",
     bullets: [
-      "Co-founded and scaled a 50+ member student club, overseeing an executive team across various operations.",
-      "Designed and delivered workshops on research design, experimentation, and scientific presentation.",
+      "Co-founded and scaled a **50+ member** student club, overseeing an executive team across various operations.",
+      "Designed and delivered **workshops** on research design, experimentation, and scientific presentation.",
     ],
   },
   {
@@ -29,9 +48,9 @@ const experience = [
     org: "VEX Robotics Team 3004A",
     period: "Mar 2024 — Present",
     bullets: [
-      "Led the iterative design and construction of competition robots, coordinating team timelines and strategies.",
-      "Mentored new members in mechanical design and CAD, ensuring technical consistency and quality across robots.",
-      "Adapted match strategies in real time during tournament play, contributing to multiple championship placements.",
+      "Led the iterative design and construction of **competition robots**, coordinating team timelines and strategies.",
+      "Mentored new members in mechanical design and **CAD**, ensuring technical consistency and quality across robots.",
+      "Adapted match strategies in real time during tournament play, contributing to multiple **championship placements**.",
     ],
   },
 ];
@@ -63,12 +82,7 @@ const projects = [
   },
 ];
 
-const skills = [
-  {
-    category: "Technologies",
-    items: ["Python", "C", "Embedded Systems", "Fusion 360", "OnShape", "Git"],
-  },
-];
+const skills = ["Python", "C", "Embedded Systems", "Fusion 360", "OnShape", "Git"];
 
 export const CONTENT_COMMANDS: ContentCommand[] = [
   {
@@ -77,23 +91,43 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
     content: (
       <div className="space-y-3">
         <p>
-          {"Hi, I'm Tyler and I'm currently a grade 12 student from Toronto, "}
-          {"Ontario! Throughout the past few years, I've grown a fascination "}
-          {"for engineering and I've developed this passion through robotics, "}
-          {"personal projects, and showcasing my research at science fairs. "}
-          {"Because of these experiences, I love building things—especially "}
-          {"things that can help solve real-world problems. That has led me "}
-          {"to become a summer engineering research intern at Sunnybrook "}
-          {"Research Institute, where I get to apply my skills and contribute "}
-          {"to focused ultrasound research alongside"}
+          <Bold
+            text={
+              "Hi, I'm **Tyler** and I'm currently a grade 12 student from Toronto, " +
+              "Ontario! Throughout the past few years, I've grown a fascination " +
+              "for **engineering** and I've developed this passion through **robotics**, " +
+              "personal projects, and showcasing my research at **science fairs**. " +
+              "Because of these experiences, I love building things—especially " +
+              "things that can help solve real-world problems. That has led me " +
+              "to become a summer engineering research intern at **Sunnybrook " +
+              "Research Institute**, where I get to apply my skills and contribute " +
+              "to focused **ultrasound research** alongside"
+            }
+          />
         </p>
         <p>
-          {"Outside of my engineering endeavours, you can find me playing "}
-          {"table tennis or experimenting with new recipes in the kitchen. "}
-          {"I've also been an artist for 10 years, a hobby that's shaped the "}
-          {"way I approach problems with both functionality and design in "}
-          {"mind!"}
+          <Bold
+            text={
+              "Outside of my engineering endeavours, you can find me playing " +
+              "**table tennis** or experimenting with new recipes in the kitchen. " +
+              "I've also been an **artist for 10 years**, a hobby that's shaped the " +
+              "way I approach problems with both functionality and design in " +
+              "mind!"
+            }
+          />
         </p>
+        <div className="grid grid-cols-2 gap-3">
+          <img
+            src="/banana-stand.jpg"
+            alt="Tyler at the Amazon Spheres in Seattle"
+            className="aspect-square w-full rounded-md object-cover"
+          />
+          <img
+            src="/aurora-silhouette.png"
+            alt="Silhouette watching the aurora borealis"
+            className="aspect-square w-full rounded-md object-cover"
+          />
+        </div>
         <p>
           {"Whether I'm in a lab, at a competition, or just at home doing my "}
           {"hobbies, I'm always looking for a new challenge. I'm excited to "}
@@ -113,13 +147,15 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
               <span className="font-semibold text-zinc-100">
                 {entry.role}
-                <span className="font-normal text-zinc-500"> · {entry.org}</span>
+                <span className="font-normal text-white"> | {entry.org}</span>
               </span>
               <span className="text-xs text-zinc-600">{entry.period}</span>
             </div>
             <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-white">
               {entry.bullets.map((b, j) => (
-                <li key={j}>{b}</li>
+                <li key={j}>
+                  <Bold text={b} />
+                </li>
               ))}
             </ul>
           </div>
@@ -160,23 +196,14 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
     id: "skills",
     description: "Languages, tools, and technologies",
     content: (
-      <div className="space-y-4">
-        {skills.map((group, i) => (
-          <div key={i}>
-            <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-              {group.category}
-            </div>
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
-              {group.items.map((item, j) => (
-                <span
-                  key={j}
-                  className="rounded border border-zinc-800 bg-zinc-900 px-2 py-0.5 text-xs text-zinc-300"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
+      <div className="flex flex-wrap gap-1.5">
+        {skills.map((item, i) => (
+          <span
+            key={i}
+            className="rounded border border-zinc-800 bg-zinc-900 px-2 py-0.5 text-xs text-zinc-300"
+          >
+            {item}
+          </span>
         ))}
       </div>
     ),
@@ -187,7 +214,7 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
     content: (
       <div className="space-y-3">
         <a
-          href="/resume.pdf"
+          href="/resume-2.pdf"
           className="inline-block rounded border border-zinc-700 px-3 py-1.5 text-xs text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-900"
         >
           Download Resume ↓

@@ -195,12 +195,8 @@ export default function Terminal({
         <div
           ref={scrollRef}
           className="no-scrollbar min-h-0 flex-1 overflow-y-auto pr-1 pt-3"
-          style={{ scrollSnapType: "y mandatory", scrollBehavior: "auto" }}
         >
-          <div
-            className="relative mb-4 rounded-md border-2 border-[var(--accent)] px-4 pb-3 pt-2"
-            style={{ scrollSnapAlign: "start" }}
-          >
+          <div className="relative mb-4 rounded-md border-2 border-[var(--accent)] px-4 pb-3 pt-2">
             <span className="absolute -top-2.5 left-4 bg-[#0b0c0f] px-2 text-xs font-semibold text-[var(--accent)]">
               {"Tyler Zeng's Portfolio"}
               <span className="text-[#b8b5b5]"> v1.0.0</span>
@@ -249,11 +245,7 @@ export default function Terminal({
           </div>
 
           {transcript.map((entry) => (
-            <div
-              key={entry.key}
-              className="mb-4 text-xs"
-              style={{ scrollSnapAlign: "start" }}
-            >
+            <div key={entry.key} className="mb-4 text-xs">
               <div className="flex gap-2">
                 <span className="text-[var(--accent)]">›</span>
                 <span className="text-[var(--accent)]">{entry.command}</span>
