@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type AlbumId = "views" | "cwsf" | "art";
@@ -9,42 +10,42 @@ const ALBUMS: { id: AlbumId; label: string; photos: string[] }[] = [
     id: "views",
     label: "views",
     photos: [
-      "/IMG_3813.png",
-      "/IMG_4253.png",
-      "/IMG_6834.png",
-      "/IMG_8444.png",
-      "/IMG_9266.png",
-      "/IMG_7287.png",
+      "/IMG_3813.jpg",
+      "/IMG_4253.jpg",
+      "/IMG_6834.jpg",
+      "/IMG_8444.jpg",
+      "/IMG_9266.jpg",
+      "/IMG_7287.jpg",
     ],
   },
   {
     id: "cwsf",
     label: "cwsf",
     photos: [
-      "/IMG_7838.png",
-      "/IMG_7837.png",
-      "/IMG_7788.png",
-      "/IMG_6716.png",
-      "/IMG_6597.png",
-      "/IMG_6583.png",
-      "/IMG_6555.png",
-      "/IMG_2999.png",
+      "/IMG_7838.jpg",
+      "/IMG_7837.jpg",
+      "/IMG_7788.jpg",
+      "/IMG_6716.jpg",
+      "/IMG_6597.jpg",
+      "/IMG_6583.jpg",
+      "/IMG_6555.jpg",
+      "/IMG_2999.jpg",
     ],
   },
   {
     id: "art",
     label: "art",
     photos: [
-      "/IMG_2913.png",
-      "/IMG_3954.png",
-      "/IMG_4663.png",
-      "/IMG_4744.png",
-      "/IMG_4925.png",
-      "/IMG_5058.png",
-      "/IMG_5647.png",
-      "/IMG_5839.png",
-      "/IMG_6289.png",
-      "/IMG_6290.png",
+      "/IMG_2913.jpg",
+      "/IMG_3954.jpg",
+      "/IMG_4663.jpg",
+      "/IMG_4744.jpg",
+      "/IMG_4925.jpg",
+      "/IMG_5058.jpg",
+      "/IMG_5647.jpg",
+      "/IMG_5839.jpg",
+      "/IMG_6289.jpg",
+      "/IMG_6290.jpg",
     ],
   },
 ];
@@ -87,8 +88,13 @@ export default function PhotosApp() {
                 key={src}
                 className="relative aspect-square overflow-hidden rounded-md ring-1 ring-white/10"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" className="h-full w-full object-cover" />
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="200px"
+                  className="object-cover"
+                />
               </div>
             ))}
           </div>

@@ -73,6 +73,7 @@ export default function Terminal({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const lastEntryRef = useRef<HTMLDivElement>(null);
 
   const isSlash = input.startsWith("/");
   const query = input.slice(1).toLowerCase();
@@ -87,7 +88,11 @@ export default function Terminal({
     : 0;
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    // Scroll the newest entry's top into view (rather than the bottom of the
+    // transcript) so long output starts readable from its beginning instead
+    // of requiring a scroll-back-up. Short output that already fits within
+    // the viewport still ends up fully visible either way.
+    lastEntryRef.current?.scrollIntoView({ block: "start" });
   }, [transcript]);
 
   const focusInput = () => inputRef.current?.focus();
@@ -244,8 +249,12 @@ export default function Terminal({
             </div>
           </div>
 
-          {transcript.map((entry) => (
-            <div key={entry.key} className="mb-4 text-xs">
+          {transcript.map((entry, i) => (
+            <div
+              key={entry.key}
+              ref={i === transcript.length - 1 ? lastEntryRef : undefined}
+              className="mb-4 text-xs"
+            >
               <div className="flex gap-2">
                 <span className="text-[var(--accent)]">›</span>
                 <span className="text-[var(--accent)]">{entry.command}</span>

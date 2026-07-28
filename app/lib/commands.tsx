@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export type ContentCommand = {
@@ -246,16 +247,24 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
           />
         </p>
         <div className="grid grid-cols-2 gap-3">
-          <img
-            src="/banana-stand.jpg"
-            alt="Tyler at the Amazon Spheres in Seattle"
-            className="aspect-square w-full rounded-md object-cover"
-          />
-          <img
-            src="/aurora-silhouette.png"
-            alt="Silhouette watching the aurora borealis"
-            className="aspect-square w-full rounded-md object-cover"
-          />
+          <div className="relative aspect-square w-full overflow-hidden rounded-md">
+            <Image
+              src="/banana-stand.jpg"
+              alt="Tyler at the Amazon Spheres in Seattle"
+              fill
+              sizes="300px"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative aspect-square w-full overflow-hidden rounded-md">
+            <Image
+              src="/aurora-silhouette.jpg"
+              alt="Silhouette watching the aurora borealis"
+              fill
+              sizes="300px"
+              className="object-cover"
+            />
+          </div>
         </div>
         <p>
           {"Whether I'm in a lab, at a competition, or just at home doing my "}
