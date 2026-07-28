@@ -1,10 +1,93 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export type ContentCommand = {
   id: string;
   description: string;
   content: ReactNode;
 };
+
+function LinkIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-3.5 w-3.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9 15L15 9" />
+      <path d="M10.5 6.5L12 5a4 4 0 1 1 5.66 5.66l-1.5 1.5" />
+      <path d="M13.5 17.5L12 19a4 4 0 1 1-5.66-5.66l1.5-1.5" />
+    </svg>
+  );
+}
+
+function ProjectLinkButton({ links, label }: { links: ProjectLink[]; label: string }) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Closing on hover-out is fragile (the gap between the button and the menu
+  // falls outside the wrapper's layout box, so the menu vanishes before the
+  // cursor reaches it). Toggle on click instead, and close on an outside
+  // click — the standard, hover-independent dropdown pattern.
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // A single script-triggered window.open() per click is all browsers (Safari
+  // especially) allow before treating further ones as blocked pop-ups, so a
+  // one-click "open all" isn't reliable. Real, individually-clicked <a> tags
+  // are never blocked, so multi-link projects get a tiny menu instead.
+  if (links.length === 1) {
+    return (
+      <a
+        href={links[0].href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open ${label}`}
+        className="mt-0.5 shrink-0 text-zinc-500 transition hover:text-[var(--accent)]"
+      >
+        <LinkIcon />
+      </a>
+    );
+  }
+
+  return (
+    <div ref={containerRef} className="relative mt-0.5 shrink-0">
+      <button
+        type="button"
+        aria-label={`Open links for ${label}`}
+        onClick={() => setOpen((o) => !o)}
+        className="text-zinc-500 transition hover:text-[var(--accent)]"
+      >
+        <LinkIcon />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full z-10 mt-1 flex flex-col gap-0.5 whitespace-nowrap rounded-md border border-zinc-700 bg-[#17181c] p-1 shadow-lg">
+          {links.map((l, j) => (
+            <a
+              key={j}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="rounded px-2 py-1 text-[11px] text-zinc-200 transition hover:bg-zinc-800 hover:text-[var(--accent)]"
+            >
+              {l.label} ↗
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function Bold({ text }: { text: string }) {
   const parts = text.split(/\*\*(.*?)\*\*/g);
@@ -55,30 +138,74 @@ const experience = [
   },
 ];
 
-const projects = [
+type ProjectLink = { label: string; href: string };
+
+const projects: {
+  name: string;
+  tagline: string;
+  tags: string[];
+  links: ProjectLink[];
+}[] = [
   {
     name: "NEXUS: A Novel Deafblind Communication Device",
     tagline:
       "Wearable accessibility device that converts conversations into speaker-attributed transcripts for deafblind individuals, using a custom 6-mic array and a dynamic speaker-ID framework. 5x National Awards.",
     tags: ["Python", "C", "Embedded Systems"],
+    links: [
+      {
+        label: "Project Board",
+        href: "https://partner.projectboard.world/ysc/project/nexus-a-multimodal-device-for-deafblind-communication-using-hybrid-dynamic-speaker-diarization-ljyrrz",
+      },
+    ],
   },
   {
     name: "Fluctus: An Accessible Digital Hearing Aid",
     tagline:
       "Fully digital hearing aid app with real-time adaptive amplification, a 10-band equalizer, noise suppression, and tinnitus support. National Finalist.",
     tags: ["Python", "SciPy", "NumPy"],
+    links: [
+      { label: "GitHub", href: "https://github.com/tylerzeng02/fluctus-ha" },
+      {
+        label: "Project Board",
+        href: "https://partner.projectboard.world/ysc/project/fluctus-using-digital-audio-classification-as-a-modern-alternative-to-traditional-hearing-aids",
+      },
+    ],
   },
   {
     name: "Longitudinal Multi-Omics Modeling for Early Risk Stratification in IBD",
     tagline:
       "Dual-encoder deep learning model predicting inflammatory bowel disease progression across 130 patients and 1,600+ samples, surfacing 3 molecularly distinct patient subgroups.",
     tags: ["Python", "PyTorch", "Scikit-learn"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/tylerzeng02/IBD_subtype_discovery",
+      },
+    ],
   },
   {
     name: "SIGMA: Sign Identification with Guided Machine Assistance",
     tagline:
       "Multilingual AI road sign recognition system using smartphone cameras and a custom-trained YOLOv8 model, achieving 95% real-time detection accuracy.",
     tags: ["Python", "OpenCV", "YOLOv8", "Figma"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/tylerzeng02/SIGMA-Sign-Identification-with-Guided-Machine-Assistance",
+      },
+    ],
+  },
+  {
+    name: "Robotic Hydrophone Positioning for Transcranial Ultrasound Mapping",
+    tagline:
+      "Custom robotic arm system built with ROS and inverse kinematics to automate hydrophone data collection through skull phantoms, enabling repeatable positioning across regions and angles for ultrasound propagation modeling at Sunnybrook Research Institute.",
+    tags: ["Python", "ROS", "Robotics"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/tylerzeng02/ROS_hydrophone_control",
+      },
+    ],
   },
 ];
 
@@ -101,7 +228,9 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
               "things that can help solve real-world problems. That has led me " +
               "to become a summer engineering research intern at **Sunnybrook " +
               "Research Institute**, where I get to apply my skills and contribute " +
-              "to focused **ultrasound research** alongside"
+              "to focused **ultrasound research** alongside leading researchers, " +
+              "working on robotics and data collection systems that push the " +
+              "field forward."
             }
           />
         </p>
@@ -167,15 +296,22 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
     id: "projects",
     description: "Things I've made",
     content: (
-      <div className="space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {projects.map((p, i) => (
-            <div
-              key={i}
-              className="rounded-md border border-zinc-800 p-3"
-            >
-              <div className="font-semibold text-zinc-100">{p.name}</div>
-              <div className="mt-1 text-xs text-white">{p.tagline}</div>
+      <div className="flex flex-col gap-3">
+        {projects.map((p, i) => (
+          <div
+            key={i}
+            className="flex h-36 items-center gap-4 overflow-hidden rounded-md border border-zinc-800 p-3 sm:h-28"
+          >
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start gap-1.5">
+                <div className="line-clamp-2 min-w-0 flex-1 font-semibold text-zinc-100">
+                  {p.name}
+                </div>
+                <ProjectLinkButton links={p.links} label={p.name} />
+              </div>
+              <div className="mt-1 line-clamp-2 text-xs text-white">
+                {p.tagline}
+              </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {p.tags.map((t, j) => (
                   <span
@@ -187,8 +323,8 @@ export const CONTENT_COMMANDS: ContentCommand[] = [
                 ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     ),
   },
